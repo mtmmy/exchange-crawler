@@ -15,9 +15,9 @@ def parse_exchange():
     resp2 = requests.post(URL, cookies=resp1.cookies)
     soup = BeautifulSoup(resp2.text, 'html.parser')
     rate_table = soup.find('table', {'id': 'inteTable1'})
-    cur_rows = rate_table.find('tr', {'class': 'tableContent-light'})    
+    cur_rows = rate_table.find('tr', {'class': 'tableContent-light'})
     usd_datas = cur_rows.find_all('td', {'class': ['odd', 'even']})
     for data in usd_datas:
-        rate_type = data['data-name']        
+        rate_type = data['data-name']
         E_SUN_RATE[rate_type] = data.text
     return E_SUN_RATE
