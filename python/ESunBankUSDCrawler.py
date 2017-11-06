@@ -14,16 +14,10 @@ def parse_exchange():
     resp1 = requests.post(URL)
     resp2 = requests.post(URL, cookies=resp1.cookies)
     soup = BeautifulSoup(resp2.text, 'html.parser')
-    usd_datas = (soup.find('table', {'id': 'inteTable1'}).
-                 find('tr', {'class': 'tableContent-light'}).
-                 find_all('td', {'class': ['odd', 'even']}))
+    rate_table = soup.find('table', {'id': 'inteTable1'})
+    cur_rows = rate_table.find('tr', {'class': 'tableContent-light'})    
+    usd_datas = cur_rows.find_all('td', {'class': ['odd', 'even']})
     for data in usd_datas:
-        rate_type = data['data-name']
-        if (rate_type in E_SUN_RATE and rate_type == '即期賣出匯率'
-                and E_SUN_RATE[rate_type] != data.string):
-            winsound.Beep(FREQ, DURATION)
+        rate_type = data['data-name']        
         E_SUN_RATE[rate_type] = data.text
-    print(E_SUN_RATE)
-    threading.Timer(5, parse_exchange).start()
-
-parse_exchange()
+    return E_SUN_RATE
